@@ -1,0 +1,38 @@
+body{
+    margin: 0;
+    height: 100vh;
+    font-family: 'Roboto', sans-serif;
+}
+#root{
+    height: 100%;
+}
+.container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    
+}
+.dashContainer{
+    margin-top: 50px;
+}
+.newJobFormDiv{
+    height: 100%;
+    width: 100%;
+    background-color: steelblue;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+.formDiv{
+    background-color: white;
+    width: 75%;
+    height: 75%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    border: 6px solid;
+}
+
+.loginDiv{
+    margin-top: 75px;
+}
