@@ -49,6 +49,7 @@ const Dashboard=()=>{
             dateHeader.innerHTML="Date&#9660;"
         }
     }, [sortProperty])
+    
     const renderJobs=(sortBy)=>{
         
         function numberWithCommas(x) {
@@ -109,7 +110,7 @@ const Dashboard=()=>{
         <div className="dashContainer">
             <Stats jobs={jobs} />
             <hr />
-            <Link to="/new-job"><button className="createBtn"><span className="plus">&#43;</span>Create</button></Link>
+            <Link to="/new-job"><button className="createBtn"><span className="plus">&#43;</span>Create New</button></Link>
         <div class="tableFixHead">
         <table>
         <thead>

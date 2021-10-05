@@ -1,11 +1,11 @@
 .createBtn{
   margin-left: 10%;
   margin-bottom: 10px;
-  width: 100px;
+  width: 120px;
   background-color: blue;
   color: white;
   font-weight: bold;
-  height: 30px;
+  height: 40px;
 }
 .createBtn:hover{
   background-color:antiquewhite;
@@ -17,7 +17,7 @@
 }
 .plus{
   font-size: 1.4em;
-  margin-right: 3px;
+  margin-right: 5px;
   margin-top: 1px;
 }
 .sortableHeader:hover{

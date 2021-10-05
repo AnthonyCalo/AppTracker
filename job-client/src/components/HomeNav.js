@@ -19,7 +19,9 @@ const HomeNavBar = () => {
                     console.log("here");
                     setSignIn(false);
                 }else{
-                    setUser(response.data.username)
+                    if(response.data.username){
+                        setUser(response.data.username)
+                    }
                     setSignIn(true);
                 }
             })
@@ -44,7 +46,7 @@ const HomeNavBar = () => {
             return ( 
                 <header className='navbar'>
                     <div className='navbar__title navbar__item'><Link to="/">Free Job Tracker</Link></div>
-                    <div className='navbar__item'><Link to="/dashboard" id="dashLink">{user}'s DashBoard</Link></div>
+                    <div className='navbar__item'><Link to="/dashboard" id="dashLink">{user} DashBoard</Link></div>
                     <div className='navbar__item'><Link onClick={signOut}>Logout</Link></div>        
 
                 </header>

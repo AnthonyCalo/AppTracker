@@ -1,4 +1,4 @@
-
+require("dotenv").config();
 const express = require('express');
 const mongoose= require('mongoose');
 const session =require('express-session');
@@ -9,6 +9,9 @@ const bodyParser = require("body-parser");
 const passportLocalMongoose = require('passport-local-mongoose');
 const bcrypt = require('bcryptjs');
 const cookieSession= require("cookie-session");
+const findOrCreate = require('mongoose-findorcreate');
+var GoogleStrategy = require('passport-google-oauth20').Strategy;
+
 
 const app=express();
 
@@ -38,16 +41,20 @@ app.use(passport.initialize());
 //session is required to have a persisent login sesion
 app.use(passport.session());
 
+
 //connect to mongoose database
 mongoose.connect("mongodb://localhost:27017/jobsDB", {useNewUrlParser: true, useUnifiedTopology: true});
 
 //DB schema. User pass and stock list
 const userSchema = new mongoose.Schema({
     username: String,
-    password: String
+    password: String,
+    googleId: String
 })
 
 userSchema.plugin(passportLocalMongoose);
+userSchema.plugin(findOrCreate);
+
 
 const jobSchema= new mongoose.Schema({
     company: String,
@@ -88,6 +95,21 @@ passport.deserializeUser(function(id, done) {
     });
   });
 
+//googleOauth
+passport.use(new GoogleStrategy({
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: "http://localhost:3001/auth/google/jobs",
+    userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo'
+  },
+  //accessToken is what lets me get data of user from google. profile contains the info. 
+  function(accessToken, refreshToken, profile, cb) {
+    console.log("HERE!!!: " + profile.id);
+    User.findOrCreate({ googleId: profile.id }, function (err, user) {
+      return cb(err, user);
+    });
+  }
+));
 //Routes
 app.post("/register", (req,res)=>{
     User.register({username: req.body.username}, req.body.password, function(err, user){
@@ -102,20 +124,16 @@ app.post("/register", (req,res)=>{
     })
     
 });
-// User.findOne({username: req.body.username},async (err, doc)=>{
-    //     if (err) throw err;
-    //     if (doc) res.send("User already exists");
-    //     if(!doc){
-    //         const hashedPass = await bcrypt.hash(req.body.password, 10);
-    //         const newUser = new User({
-    //             username: req.body.username,
-    //             password: hashedPass
-    //         });
-    //         await newUser.save();
-    //         res.send("user created");
-    //     }
-    // })
-
+//use passport to authenticate  with google strategy. scope is what we are getting from google. THe user profile
+app.get("/auth/google/",
+    passport.authenticate('google', { scope: ["profile"] })
+);
+//callbackURL from line 47. where google sends user after authentication
+//app.get('path', middleware, function(req, res))
+app.get("/auth/google/jobs", 
+passport.authenticate('google', {failureRedirect: 'http://localhost:3000/login'}), function(req, res){
+    res.redirect("http://localhost:3000/dashboard");
+})
 //login with passport local strategy    
 app.route("/login")
     .post((req, res)=>{
@@ -197,13 +215,14 @@ app.post("/update-job", (req, res)=>{
 //checks if user signed in . 
 //Returns false or user data
 app.get("/signedin", function(req, res){
-    console.log(req.user);
     //req.isauthenticated works because client axios sends withCrenentials
     //passport method checks if user is signed in 
     if(req.isAuthenticated()){
+        console.log(req.user);
         console.log(typeof(req.user._id));
         res.send(req.user);
     }else{
+        console.log("not Signed")
         res.send(false);
     }
 })

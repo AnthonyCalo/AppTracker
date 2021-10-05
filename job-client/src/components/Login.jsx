@@ -76,6 +76,7 @@ const Login=()=>{
         })
     }
     return ( 
+        <>
     <div className="loginDiv">
         <div className="ui form">
             <h1>Register</h1>
@@ -106,6 +107,17 @@ const Login=()=>{
         <hr />
         <button onClick={getJobs}>Get Jobs Test</button>
     </div>
+    <div class="col-sm-4">
+      <div class="card">
+        <div class="card-body">
+          <a class="btn btn-block btn-google" href="http://localhost:3001/auth/google/" role="button">
+            <i class="fab fa-google"></i>
+            Sign Up with Google
+          </a>
+        </div>
+      </div>
+    </div>
+    </>
 
     )
 }
