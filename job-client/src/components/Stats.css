@@ -7,9 +7,27 @@
 .dashStats{
     display: flex;
     flex-direction: row;
+    width: 60%;
+    
 }
 .indivStat{
     justify-content: center;
     text-align: center;
     align-items: center;
+    margin-left: 10%;
+}
+.statLabel_h2{
+    font-family: 'Inconsolata', monospace;
+    color: blue;
+}
+.expandBtn{
+    margin-left: 5%;
+    font-family: 'Inconsolata', monospace;
+    text-decoration: underline;
+    color: blue;
+    font-weight: bold;
+    margin-top: 85px;
+}
+.expandBtn:hover{
+    cursor: pointer;
 }

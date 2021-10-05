@@ -26,13 +26,27 @@ const HomeNavBar = () => {
         }
         checkSignIn();
     }, []);
+    const signOut = ()=>{
+        //simple logout
+        axios.get("http://localhost:3001/logout",{
+            withCredentials: true,
+            headers: {
+                "Content-Type": 'application/json'
+            }
+        }).then(response=>{
+            //reload the page to call a use effect that will register signout
+            setSignIn(false);
+            window.location.reload();
+        })
+    }
     const renderHome=()=>{
         if(signedIn){
             return ( 
                 <header className='navbar'>
                     <div className='navbar__title navbar__item'><Link to="/">Free Job Tracker</Link></div>
-                    <div className='navbar__item'><Link to="/new-job">New App</Link></div>        
-                    <div className='navbar__item'><Link to="/dashboard" id="dashLink">{user}'s DashBoard</Link></div>        
+                    <div className='navbar__item'><Link to="/dashboard" id="dashLink">{user}'s DashBoard</Link></div>
+                    <div className='navbar__item'><Link onClick={signOut}>Logout</Link></div>        
+
                 </header>
             )
         }else{

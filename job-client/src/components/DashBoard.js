@@ -57,13 +57,12 @@ const Dashboard=()=>{
         let jobsList=( 
             <div></div>
         )
-        const jobClick=(e)=>{
-        }
+        
         const renderTF=(item)=>{
             if(item===true){
-                return("Yes")
+                return("Open");
             }else{
-                return("No")
+                return("Closed");
             }
         }
         if(jobs){
@@ -74,10 +73,10 @@ const Dashboard=()=>{
                     counter++;
                     return(
                         <tr>
-                            <td onClick={(e)=>jobClick(e)}>{job.company}</td>
+                            <td> <Link to={`/jobs/${job._id}`}>{job.company}</Link></td>
                             <td>{job.jobTitle}</td>
                             <td>{job.date.slice(0,10)}</td>
-                            <td>{renderTF(job.interview)}</td>
+                            <td>{renderTF(job.open)}</td>
                             <td><Link to={`/jobs/${job._id}`}>Edit</Link></td>
                         </tr> 
                             
@@ -86,10 +85,10 @@ const Dashboard=()=>{
                     counter++;
                     return(
                         <tr className="darkRow">
-                            <td onClick={(e)=>jobClick(e)}>{job.company}</td>
+                            <td><Link to={`/jobs/${job._id}`}>{job.company}</Link></td>
                             <td>{job.jobTitle}</td>
                             <td>{job.date.slice(0,10)}</td>
-                            <td>{renderTF(job.interview)}</td>
+                            <td>{renderTF(job.open)}</td>
                             <td><Link to={`/jobs/${job._id}`}>Edit</Link></td>
                         </tr> 
                             
@@ -110,6 +109,7 @@ const Dashboard=()=>{
         <div className="dashContainer">
             <Stats jobs={jobs} />
             <hr />
+            <Link to="/new-job"><button className="createBtn"><span className="plus">&#43;</span>Create</button></Link>
         <div class="tableFixHead">
         <table>
         <thead>
@@ -117,7 +117,7 @@ const Dashboard=()=>{
             <th className="sortableHeader" id="compHeader" onClick={(e)=>setProperty('company')}>Company&#9660;</th>
             <th className="sortableHeader" id="jobTitleHeader" onClick={(e)=>setProperty('jobTitle')}>Job Title</th>
             <th className="sortableHeader" id="dateHeader" onClick={(e)=>setProperty('date')}>Date</th>
-            <th>Response</th>
+            <th>Open</th>
             <th>Edit</th>
           </tr>
         </thead>

@@ -26,17 +26,7 @@ const HomeContainer=()=>{
         }
         checkSignIn();
     }, [])
-    const renderHome=()=>{
-        if(authed){
-            return( 
-                <h1>SIGNED IN</h1>
-            )
-        }else{
-            return( 
-                <h1>NOT SIGNED IN</h1>
-            )
-        }
-    }
+    
     return ( 
         <div className="homeContainer">
             <div className="section1">
@@ -44,8 +34,8 @@ const HomeContainer=()=>{
                 <p>Simple online application tracking software. Utilize to view statistics and track applications</p>
 
                 <Link to="/login"><button className="getStartedBtn">Click here to Signin/ Register</button></Link>
+                <br/>
 
-                {renderHome()}
                 <img src="/images/placeholderImg.PNG" className="homeScreenshotImg"></img>
 
             </div>

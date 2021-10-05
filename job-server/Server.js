@@ -55,8 +55,10 @@ const jobSchema= new mongoose.Schema({
     date: Date,
     notes: String,
     offer: Boolean,
+    reject: Boolean,
     interview: Boolean,
     phoneScreen: Boolean,
+    open: Boolean,
     user:[
         {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
       ]
@@ -147,7 +149,9 @@ app.post("/job-app", (req, res)=>{
                 offer: req.body.offer,
                 interview: req.body.interview,
                 phoneScreen: req.body.phoneScreen,
-                user: req.user._id
+                user: req.user._id,
+                reject: req.body.reject,
+                open: req.body.open
             }
             console.log("authed");
             const saveJob = new Jobs(job);
@@ -180,9 +184,12 @@ app.post("/update-job", (req, res)=>{
         company: req.body.company,
         jobTitle: req.body.jobTitle,
         notes: req.body.notes,
-        offer: false,
+        offer: req.body.offer,
         phoneScreen: req.body.phone,
+        reject: req.body.reject,
         interview: req.body.interview,
+        open: req.body.open
+
     }).then(()=>{
         console.log("updated record");
     })

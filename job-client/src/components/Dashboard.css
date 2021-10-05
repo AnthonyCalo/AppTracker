@@ -1,5 +1,24 @@
+.createBtn{
+  margin-left: 10%;
+  margin-bottom: 10px;
+  width: 100px;
+  background-color: blue;
+  color: white;
+  font-weight: bold;
+  height: 30px;
+}
+.createBtn:hover{
+  background-color:antiquewhite;
+  color: blue;
+  cursor: pointer;
+}
 .darkRow{
   background-color:#eee;
+}
+.plus{
+  font-size: 1.4em;
+  margin-right: 3px;
+  margin-top: 1px;
 }
 .sortableHeader:hover{
   cursor:pointer;
@@ -30,5 +49,10 @@
   }
   tr{
     height: 40px;
+
+  }
+  tr:hover{
+    background-color:rgb(219, 213, 213);
+    color: blue;
 
   }

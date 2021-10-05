@@ -11,7 +11,10 @@ const EditApp=()=>{
     const [notes, setNotes] = useState("");
     const [interview, setInterview] = useState(false);
     const [phone, setPhone] = useState(false);
-    const parameters = useParams();
+    const [reject, setRejection] = useState(false);
+    const [offer, setOffer] = useState(false);
+    const [open, setOpen] = useState(false);
+    
     const params=useParams();
 
     const getJob= async()=>{
@@ -31,6 +34,9 @@ const EditApp=()=>{
             setPhone(response.data.phoneScreen);
             setNotes(response.data.notes);
             setInterview(response.data.interview);
+            setOpen(response.data.open);
+            setRejection(response.data.reject);
+            setOffer(response.data.offer);
         });
     }
     useEffect(()=>{
@@ -44,9 +50,22 @@ const EditApp=()=>{
             selectElement("phoneSelector", 'true');
         }
         if(interview==true){
-            selectElement("interviewSelect", 'true');
+            selectElement("interviewSelector", 'true');
         }
-        
+        if(offer==true){
+            selectElement("offerSelector", "true")
+        }
+        console.log(open);
+        if(open==true){
+            console.log("openSelector")
+            selectElement("openSelector", "true")
+        }
+        if(reject==true){
+            console.log("its true")
+            selectElement("rejectSelector", "true")
+        }else{
+            console.log("reject:", reject);
+        }
 
         
     },[])
@@ -58,9 +77,12 @@ const EditApp=()=>{
             company: company,
             jobTitle: jobTitle,
             notes: notes,
-            offer: false,
-            phoneScreen: phone,
+            offer: offer,
+            phone: phone,
             interview: interview,
+            reject: reject,
+            open: open
+
         }
         console.log(payload);
         axios("http://localhost:3001/update-job",{
@@ -73,6 +95,29 @@ const EditApp=()=>{
         });
         document.getElementById("dashLink").click();
 
+    }
+    const getTrueFalse=(bool)=>{
+        if(bool==='true'){
+            return(true);
+        }else{
+            return(false);
+        }
+    }
+
+    const setBool=(category ,bool)=>{
+        if(category==="interview"){
+            setInterview(getTrueFalse(bool));
+        }else if(category==="phone"){
+            setPhone(getTrueFalse(bool));
+        }else if(category==="rejection"){
+            setRejection(getTrueFalse(bool));
+        }else if(category==="open"){
+            setOpen(getTrueFalse(bool));
+        }else if(category==="offer"){
+            console.log("OFFER");
+            console.log(bool);
+            setOffer(getTrueFalse(bool));
+        }
     }
     return ( 
         <div className="newJobFormDiv">
@@ -105,25 +150,63 @@ const EditApp=()=>{
                         value={date}
                         onChange={(e)=>setDate(e.target.value)} />
                 </label>
-                <label for="field4"><span>Interview</span>
-                    <select 
-                        name="field4" 
-                        value={interview} 
-                        onChange={(e)=>setInterview(e.target.value)} 
-                        class="select-field"
-                        id="interviewSelect">
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
-                    </select>
-                </label>
-                <label for="field4"><span>Phone Screen</span>
-                    <select name="field4"
-                            value={phone}
-                            onChange={(e)=>setPhone(e.target.value)}
+                <div className="fourBools"> 
+                    <label for="field4"><span>Interview</span>
+                        <select 
+                            name="field4" 
+                            value={interview} 
+                            onChange={(e)=>setBool("interview" ,e.target.value)} 
                             class="select-field"
-                            id="phoneSelect">
+                            id="interviewSelector"
+                        >
                         <option value="true">Yes</option>
                         <option value="false">No</option>
+                        </select>
+                    </label>
+                    <label for="field5"><span>Phone Screen</span>
+                        <select 
+                            name="field5"
+                            value={phone} 
+                            onChange={(e)=>setBool("phone", e.target.value)} 
+                            class="select-field"
+                            id="phoneSelector"
+                            >
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </label>
+                    <label for="field7"><span>Offer</span>
+                        <select 
+                            name="field7" 
+                            value={offer} 
+                            onChange={(e)=>setBool("offer", e.target.value)} 
+                            class="select-field"
+                            id="offerSelector">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </label>
+                    <label for="field8"><span>Rejection</span>
+                        <select 
+                            name="field8" 
+                            value={reject}
+                            onChange={(e)=>setBool("rejection", e.target.value)} 
+                            class="select-field"
+                            id="rejectSelector">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </label>
+                </div>
+                <label for="field6"><span>Open</span>
+                    <select 
+                        name="field6"
+                        value={open} 
+                        onChange={(e)=>setBool("open",e.target.value)} 
+                        class="select-field"
+                        id="openSelector">
+                        <option value="true">Open</option>
+                        <option value="false">Closed</option>
                     </select>
                 </label>
                 <label for="field5"><span>Notes</span>
