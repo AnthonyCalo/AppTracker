@@ -3,20 +3,21 @@ import "./Stats.css";
 import Chart from "react-google-charts";
 
 const Stats=(props)=>{
-    console.log(props.jobs)
     const [interviews, setInterviews]= useState(0);
     const [offers, setOffers]= useState(0);
     const [open, setOpen]=useState(0);
+    const [jobTypeStats, setJobTypeStats] = useState([]);
     useEffect(()=>{
         setInterviews(0);
         setOffers(0);
         setOpen(0);
 
-    },[])
+    },[]);
     var total_apps = props.jobs.length
     const getBoolStats=()=>{
-        console.log("here")
+        
         props.jobs.forEach(job=>{
+            
             if(job.interview===true){
                 setInterviews(prev=>{
                     return ( prev+1)
@@ -33,9 +34,35 @@ const Stats=(props)=>{
                 });
             }
         })
+        
+    }
+    const getJobTypeStats=()=>{
+        //getting data for chart
+        //each counts the number of each job title
+        let typeList={}
+        props.jobs.forEach(job=>{
+            if(typeList[job.jobTitle]===undefined){
+                typeList[job.jobTitle]=1
+            }else{
+                typeList[job.jobTitle]+=1
+            }
+        })
+        let typeKeys=Object.keys(typeList);
+        let jobTypeStatsListFormat=[["job", "apps"]];
+        
+        typeKeys.forEach(key=>{
+           jobTypeStatsListFormat.push([key, typeList[key]]);
+        })
+        setJobTypeStats(jobTypeStatsListFormat);
+        console.log(jobTypeStats);
     }
     useEffect(()=>{
+        console.log(jobTypeStats, "job states useEffect");
+
+    }, [jobTypeStats])
+    useEffect(()=>{
         getBoolStats();
+        getJobTypeStats();
     }, [props.jobs]);
     const [expand, setExpand]=useState(false);
     const renderStatsPage=()=>{
@@ -46,6 +73,11 @@ const Stats=(props)=>{
                 setExpand(true);
             }
         }
+        const options = {
+            title: "Job Title's",
+            is3D: true
+
+          };
         if(!expand){
             return ( 
                 <div className="statsDash">
@@ -96,32 +128,50 @@ const Stats=(props)=>{
                     <h1>{offers}</h1>
                     <h2 className="statLabel_h2">Offers</h2>
                     </div>
-                    <div className="expandBtn">
-                        <span onClick={()=>{expandClick()}}>Expand</span>
-                    </div>
+                    
                 </div>
-                <h1>EXPANDED</h1>
             </div>
                 <div className="charts_div">
-                <Chart
-                    width={600}
-                    height={400}
-                    chartType="PieChart"
-                    loader={<div>Loading Chart</div>}
-                    data={[
-                        ['Task', 'Hours per Day'],
-                            ['Interviews',  interviews],
-                            ['Offers', offers],
-                            ['Rejections', total_apps-(interviews+open)],
-                            ['Waiting', open]
-                    ]}
-                    options={{
-                    title: 'Interviews vs Offers',
-                    chartArea: { width: '50%' }
-                    }}
-                    legendToggle
-                />
+                    <div className="pieChart">
+                        <Chart
+                            width={500}
+                            height={400}
+                            chartType="ColumnChart"
+                            loader={<div>Loading Chart</div>}
+                            data={[
+                                ['Status', 'Number of type', { role: "style" }],
+                                    ['Rejections', total_apps-(offers+open), "color: red"],
+                                    ['Interviews',  interviews, "color: blue"],
+                                    ['Waiting', open, "color: yellow"],
+                                    ['Offers', offers, "color: green"]
+                            ]}
+                            options={{
+                            title: 'Interviews vs Offers',
+                            chartArea: { width: '60%' },
+                            }}
+                            legendToggle
+                        />
+                    </div>
+                    <div className="barChart">
+                        <Chart
+                            width={500}
+                            height={400}
+                            chartType="PieChart"
+                            loader={<div>Loading Chart</div>}
+                            data={
+                                jobTypeStats
+                            }
+                            options={
+                            options
+                            }
+                            legendToggle
+                        />
+                    </div>
+                    <div className="shrinkBtn">
+                    <span onClick={()=>{expandClick()}}>Shrink</span>
                 </div>
+                </div>
+                
                 </>
                 
             )

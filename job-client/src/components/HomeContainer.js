@@ -5,33 +5,12 @@ import axios from "axios"
 
 
 const HomeContainer=()=>{
-    const [authed, setAuthed] = useState(false);
-    useEffect(()=>{
-        const checkSignIn=()=>{
-            axios.get("http://localhost:3001/signedin",{
-                withCredentials: true,
-                headers: {
-                    "Content-Type": 'application/json'
-                }
-            }).then(response=>{
-                //respons.data ===false when not signed in 
-                if(response.data===false){
-                    console.log("here")
-                    return(false);
-                }else{
-                    console.log(response.data)
-                    setAuthed(true);
-                }
-            })
-        }
-        checkSignIn();
-    }, [])
-    
+
     return ( 
         <div className="homeContainer">
             <div className="section1">
                 <h1 className="homeSubTitle">Job Application Tracking</h1>
-                <p>Simple online application tracking software. Utilize to view statistics and track applications</p>
+                <p>Simple online application tracking software. Analyze application data</p>
 
                 <Link to="/login"><button className="getStartedBtn">Click here to Signin/ Register</button></Link>
                 <br/>

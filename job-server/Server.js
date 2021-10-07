@@ -212,6 +212,15 @@ app.post("/update-job", (req, res)=>{
         console.log("updated record");
     })
 })
+app.post("/delete-job", (req, res)=>{
+    console.log(req.body)
+    Jobs.deleteOne({_id: req.body.id}).then(()=>{
+        console.log("deleted");
+        res.send("deleted");
+    }).catch((err)=>{
+        console.log(err);
+    })
+})
 //checks if user signed in . 
 //Returns false or user data
 app.get("/signedin", function(req, res){

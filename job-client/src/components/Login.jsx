@@ -6,6 +6,7 @@ const Login=()=>{
     const [pass, setPass] = useState('');
     const [registerUser, setRegisterUser] = useState("");
     const [registerPass, setRegisterPass]=useState('');
+    const [logReg, setLogReg] = useState(true);
     const login=()=>{
         
         axios({
@@ -75,22 +76,35 @@ const Login=()=>{
             window.location.reload();
         })
     }
-    return ( 
-        <>
-    <div className="loginDiv">
-        <div className="ui form">
-            <h1>Register</h1>
-            <div className="field">
-                <label>Username</label>
-                <input placeholder="create username" id="regUser" value={registerUser} autofocus onChange={e=>setRegisterUser(e.target.value)} />
-            </div>
-            <div className="field">
-                <label>Password</label>
-                <input placeholder="make password" value={registerPass} onChange={e=>setRegisterPass(e.target.value)} />
-            </div>
-            <button className="ui button" onClick={register}>Register</button>
+    const renderLogin=()=>{
+        if(logReg){
+            return ( 
+                <div className="ui form">
+                <h1>Register</h1>
+                <div className="field">
+                    <label>Username</label>
+                    <input placeholder="create username" id="regUser" value={registerUser} autofocus onChange={e=>setRegisterUser(e.target.value)} />
+                </div>
+                <div className="field">
+                    <label>Password</label>
+                    <input placeholder="make password" value={registerPass} onChange={e=>setRegisterPass(e.target.value)} />
+                </div>
+                <button className="ui button" onClick={register}>Register</button>
+                <div class="card-body">
+                    <a class="btn btn-block btn-google" href="http://localhost:3001/auth/google/" role="button">
+                <i class="fab fa-google"></i>
+            Sign Up with Google
+          </a>
         </div>
-        <div className="ui form">
+                <p>Already have an account</p>
+                <p>Click <span onClick={()=>setLogReg(false)}>here</span> to login</p>
+            </div>
+            )
+        }else{
+            console.log(logReg);
+            console.log('logreg')
+            return( 
+                <div className="ui form">
             <h1>Log in</h1>
             <div className="field">
                 <label>Username</label>
@@ -101,7 +115,24 @@ const Login=()=>{
                 <input placeholder="password" type="password" value={pass} onChange={e=>setPass(e.target.value)} />
             </div>
             <button className="ui button" onClick={login}>Submit</button>
+            <div class="card-body">
+            <a class="btn btn-block btn-google" href="http://localhost:3001/auth/google/" role="button">
+                <i class="fab fa-google"></i>
+                Sign In with Google
+            </a>
+        </div>
+            <p>No account yet</p>
+            <p>Click <span onClick={()=>setLogReg(true)}>here</span> to register</p>
+            
             </div>
+            )
+        }
+    }
+    return ( 
+        <>
+    <div className="loginDiv">
+        {renderLogin()}
+        <hr />
         <button onClick={checkSignIn}>CheckAuth</button>
         <button onClick={signOut}>Sign Out</button>
         <hr />

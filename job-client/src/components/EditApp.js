@@ -96,6 +96,22 @@ const EditApp=()=>{
         document.getElementById("dashLink").click();
 
     }
+    const handleDelete=(event)=>{
+        event.preventDefault();
+        let payload={
+            id: params.id
+        }
+        axios("http://localhost:3001/delete-job",{
+            method: "POST",
+            data: payload,
+            withCredentials: true,
+            headers: {
+                "Content-Type": 'application/json'
+            }
+        });
+        document.getElementById("dashLink").click();
+    }
+
     const getTrueFalse=(bool)=>{
         if(bool==='true'){
             return(true);
@@ -218,6 +234,7 @@ const EditApp=()=>{
             <div className="buttonDiv">
                 <button onClick={handleSubmit} className="submitBtn">Submit</button>
                 <button onClick={()=>{document.getElementById("dashLink").click()}} className="submitBtn cancelBtn">Cancel Update</button>
+                <button onClick={handleDelete} className="submitBtn cancelBtn">Delete Application</button>
             </div>
             </div>
             </div>

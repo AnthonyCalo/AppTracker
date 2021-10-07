@@ -3,31 +3,9 @@ import {Link} from "react-router-dom";
 import {useState, useEffect} from 'react';
 import axios from "axios";
 
-const HomeNavBar = () => {
-    const [signedIn, setSignIn] = useState(false);
+const HomeNavBar = (props) => {
     const [user, setUser]= useState("")
-    useEffect(()=>{
-        const checkSignIn=()=>{
-            axios.get("http://localhost:3001/signedin",{
-                withCredentials: true,
-                headers: {
-                    "Content-Type": 'application/json'
-                }
-            }).then(response=>{
-                //respons.data ===false when not signed in 
-                if(response.data===false){
-                    console.log("here");
-                    setSignIn(false);
-                }else{
-                    if(response.data.username){
-                        setUser(response.data.username)
-                    }
-                    setSignIn(true);
-                }
-            })
-        }
-        checkSignIn();
-    }, []);
+    
     const signOut = ()=>{
         //simple logout
         axios.get("http://localhost:3001/logout",{
@@ -37,12 +15,11 @@ const HomeNavBar = () => {
             }
         }).then(response=>{
             //reload the page to call a use effect that will register signout
-            setSignIn(false);
             window.location.reload();
         })
     }
     const renderHome=()=>{
-        if(signedIn){
+        if(props.signedIn){
             return ( 
                 <header className='navbar'>
                     <div className='navbar__title navbar__item'><Link to="/">Free Job Tracker</Link></div>

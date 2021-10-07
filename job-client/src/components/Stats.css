@@ -31,3 +31,20 @@
 .expandBtn:hover{
     cursor: pointer;
 }
+.shrinkBtn{
+    float: right;
+    font-family: 'Inconsolata', monospace;
+    text-decoration: underline;
+    color: blue;
+    font-weight: bold;
+    margin-top: 85px;
+}
+.shrinkBtn:hover{
+    cursor: pointer;
+}
+.charts_div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}

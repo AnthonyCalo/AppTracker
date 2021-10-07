@@ -5,8 +5,32 @@ import HomeContainer from "./components/HomeContainer";
 import Login from './components/Login';
 import EditApp from "./components/EditApp";
 import Dashboard from "./components/DashBoard";
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
+import ProtectedRoute from './components/ProtectedRoute';
+
 const App =()=>{
-    
+    const [auth, setAuth] = useState(false)
+    const checkSignIn=()=>{
+        console.log("called");
+        axios.get("http://localhost:3001/signedin",{
+            withCredentials: true,
+            headers: {
+                "Content-Type": 'application/json'
+            }
+        }).then(response=>{
+            //respons.data ===false when not signed in 
+            if(response.data===false){
+                console.log("here");
+                setAuth(false);
+            }else{
+                setAuth(true)
+            }
+        })
+    }
+    useEffect(()=>{
+        checkSignIn();
+    })
     // function sortByProperty(property){  
     //     return function(a,b){  
     //        if(a[property] > b[property])  
@@ -32,7 +56,7 @@ const App =()=>{
 
     return ( 
         <Router>
-            <HomeNavBar />
+            <HomeNavBar signedIn={auth}/>
             <Switch>
             <Route exact path="/">
                     <HomeContainer />
@@ -43,12 +67,8 @@ const App =()=>{
             <Route exact path="/login">
                 <Login />
             </Route>
-            <Route exact path="/dashboard">
-                <Dashboard />
-            </Route>
-            <Route path="/jobs/:id">
-                <EditApp />
-            </Route>
+            <ProtectedRoute exact path="/dashboard" component={Dashboard} isAuth={auth} />
+            <ProtectedRoute exact path="/jobs/:id" component={EditApp} isAuth={auth} />
             </Switch>
         </Router>
         
