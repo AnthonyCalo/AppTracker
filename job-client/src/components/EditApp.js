@@ -47,21 +47,19 @@ const EditApp=()=>{
         if(phone==true){
             selectElement("phoneSelector", 'true');
         }
-        if(interview==true){
+        if(interview===true){
             selectElement("interviewSelector", 'true');
         }
-        if(offer==true){
+        if(offer===true){
             selectElement("offerSelector", "true")
         }
         console.log(open);
-        if(open==true){
+        if(open===true){
             console.log("openSelector")
             selectElement("openSelector", "true")
         }
-        
-
-        
     },[])
+    
     const handleSubmit=(event)=>{
         console.log("HERE SUBMITTED FORM")
         event.preventDefault();
@@ -211,7 +209,7 @@ const EditApp=()=>{
 
             </form>
             <div className="buttonDiv">
-                <button onClick={handleSubmit} className="submitBtn">Submit</button>
+                <button onClick={handleSubmit} className="submitBtn">Update</button>
                 <button onClick={()=>{document.getElementById("dashLink").click()}} className="submitBtn cancelBtn">Cancel Update</button>
                 <button onClick={handleDelete} className="submitBtn cancelBtn">Delete Application</button>
             </div>

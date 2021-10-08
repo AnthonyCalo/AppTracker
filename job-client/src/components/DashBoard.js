@@ -6,6 +6,12 @@ import Stats from "./Stats";
 import Filter from './Filter';
 
 const Dashboard=()=>{
+//UseState Hooks_____________________________________________________________________________________
+    const [jobs, setJobs] = useState([]);
+    const [sortProperty, setProperty]=useState('date');
+    const [openFilter, setOpenFilter]=useState('both');
+    
+//Sub Functions_____________________________________________________________________________________
     function sortByProperty(property){  
         return function(a,b){  
         if(a[property] > b[property])  
@@ -16,8 +22,6 @@ const Dashboard=()=>{
         return 0;  
         }  
     }
-    const [jobs, setJobs] = useState([]);
-    const [sortProperty, setProperty]=useState('date');
     const getUserJobs=()=>{
         axios.get("http://localhost:3001/user-jobs",{
             withCredentials: true,
@@ -29,6 +33,16 @@ const Dashboard=()=>{
             setJobs(response.data);
         })
     }
+    const openFilterFunction=(filterObject)=>{
+        console.log(filterObject);
+        setOpenFilter(filterObject)
+    }
+    //
+    const filterHandleSort=(value)=>{
+        console.log('called');
+        setProperty(value);
+    }
+//useEffect Hooks_________________________________________________________________________________________________
     useEffect(()=>{
         getUserJobs()
     }, [])
@@ -50,7 +64,7 @@ const Dashboard=()=>{
             dateHeader.innerHTML="Date&#9660;"
         }
     }, [sortProperty])
-    
+//renderFunctions_______________________________________________________________________   
     const renderJobs=(sortBy)=>{
         
         function numberWithCommas(x) {
@@ -71,31 +85,101 @@ const Dashboard=()=>{
             jobs.sort(sortByProperty(sortBy));
             let counter=0;
             jobsList = jobs.map(job=>{
-                if(counter%2===0 || counter===0){
-                    counter++;
-                    return(
-                        <tr>
-                            <td> <Link to={`/jobs/${job._id}`}>{job.company}</Link></td>
-                            <td>{job.jobTitle}</td>
-                            <td>{job.date.slice(0,10)}</td>
-                            <td>{renderTF(job.open)}</td>
-                            <td><Link to={`/jobs/${job._id}`}>Edit</Link></td>
-                        </tr> 
+                switch(openFilter){
+                    case "both":
+                        if(counter%2===0 || counter===0){
+                            counter++;
+                            return(
+                                <tr>
+                                    <td> <Link to={`/jobs/${job._id}`}>{job.company}</Link></td>
+                                    <td>{job.jobTitle}</td>
+                                    <td>{job.date.slice(0,10)}</td>
+                                    <td>{renderTF(job.open)}</td>
+                                    <td><Link to={`/jobs/${job._id}`}>Edit</Link></td>
+                                </tr> 
+                                    
+                            )
+                        }else{
+                            counter++;
+                            return(
+                                <tr className="darkRow">
+                                    <td><Link to={`/jobs/${job._id}`}>{job.company}</Link></td>
+                                    <td>{job.jobTitle}</td>
+                                    <td>{job.date.slice(0,10)}</td>
+                                    <td>{renderTF(job.open)}</td>
+                                    <td><Link to={`/jobs/${job._id}`}>Edit</Link></td>
+                                </tr> 
+                                    
+                            )
+                        }
+                    case "closed":
+                        if(job.open===false){
+                            console.log(job);
+                            if(counter%2===0 || counter===0){
+                                counter++;
+                                return(
+                                    <tr>
+                                        <td> <Link to={`/jobs/${job._id}`}>{job.company}</Link></td>
+                                        <td>{job.jobTitle}</td>
+                                        <td>{job.date.slice(0,10)}</td>
+                                        <td>{renderTF(job.open)}</td>
+                                        <td><Link to={`/jobs/${job._id}`}>Edit</Link></td>
+                                    </tr> 
+                                        
+                                )
+                            }else{
+                                counter++;
+                                return(
+                                    <tr className="darkRow">
+                                        <td><Link to={`/jobs/${job._id}`}>{job.company}</Link></td>
+                                        <td>{job.jobTitle}</td>
+                                        <td>{job.date.slice(0,10)}</td>
+                                        <td>{renderTF(job.open)}</td>
+                                        <td><Link to={`/jobs/${job._id}`}>Edit</Link></td>
+                                    </tr> 
+                                        
+                                )
+                            }
+                            }else{
+                                return;
+                            }
+                    case "open":
+                        if(job.open===true){
+                            console.log(job);
+                            if(counter%2===0 || counter===0){
+                                counter++;
+                                return(
+                                    <tr>
+                                        <td> <Link to={`/jobs/${job._id}`}>{job.company}</Link></td>
+                                        <td>{job.jobTitle}</td>
+                                        <td>{job.date.slice(0,10)}</td>
+                                        <td>{renderTF(job.open)}</td>
+                                        <td><Link to={`/jobs/${job._id}`}>Edit</Link></td>
+                                    </tr> 
+                                        
+                                )
+                            }else{
+                                counter++;
+                                return(
+                                    <tr className="darkRow">
+                                        <td><Link to={`/jobs/${job._id}`}>{job.company}</Link></td>
+                                        <td>{job.jobTitle}</td>
+                                        <td>{job.date.slice(0,10)}</td>
+                                        <td>{renderTF(job.open)}</td>
+                                        <td><Link to={`/jobs/${job._id}`}>Edit</Link></td>
+                                    </tr> 
+                                        
+                                )
+                            }
+                        }else{
+                            return;
+                            }
+                    default:
+                        return    
                             
-                    )
-                }else{
-                    counter++;
-                    return(
-                        <tr className="darkRow">
-                            <td><Link to={`/jobs/${job._id}`}>{job.company}</Link></td>
-                            <td>{job.jobTitle}</td>
-                            <td>{job.date.slice(0,10)}</td>
-                            <td>{renderTF(job.open)}</td>
-                            <td><Link to={`/jobs/${job._id}`}>Edit</Link></td>
-                        </tr> 
-                            
-                    )
-                }
+                    }
+                    
+                
                 
             })
             return jobsList;
@@ -113,7 +197,7 @@ const Dashboard=()=>{
             <hr />
             <Link to="/new-job"><button className="createBtn"><span className="plus">&#43;</span>Create New</button></Link>
         <div className="filterTableDiv">
-            <Filter jobs={jobs}/>
+            <Filter openFilterFunction={openFilterFunction} filterHandleSort={filterHandleSort} sortProps={sortProperty}/>
             <div class="tableFixHead">
             <table>
             <thead>

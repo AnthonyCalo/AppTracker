@@ -10,7 +10,7 @@ const HomeContainer=()=>{
         <div className="homeContainer">
             <div className="section1">
                 <h1 className="homeSubTitle">Job Application Tracking</h1>
-                <p>Simple online application tracking software. Analyze application data</p>
+                <p>Simple online application tracking software. Analyze application data with personalized dashboard</p>
 
                 <Link to="/login"><button className="getStartedBtn">Click here to Signin/ Register</button></Link>
                 <br/>

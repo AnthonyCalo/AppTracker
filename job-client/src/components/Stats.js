@@ -54,12 +54,8 @@ const Stats=(props)=>{
            jobTypeStatsListFormat.push([key, typeList[key]]);
         })
         setJobTypeStats(jobTypeStatsListFormat);
-        console.log(jobTypeStats);
     }
-    useEffect(()=>{
-        console.log(jobTypeStats, "job states useEffect");
 
-    }, [jobTypeStats])
     useEffect(()=>{
         getBoolStats();
         getJobTypeStats();
