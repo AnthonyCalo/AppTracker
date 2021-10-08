@@ -11,7 +11,6 @@ const EditApp=()=>{
     const [notes, setNotes] = useState("");
     const [interview, setInterview] = useState(false);
     const [phone, setPhone] = useState(false);
-    const [reject, setRejection] = useState(false);
     const [offer, setOffer] = useState(false);
     const [open, setOpen] = useState(false);
     
@@ -35,7 +34,6 @@ const EditApp=()=>{
             setNotes(response.data.notes);
             setInterview(response.data.interview);
             setOpen(response.data.open);
-            setRejection(response.data.reject);
             setOffer(response.data.offer);
         });
     }
@@ -60,12 +58,7 @@ const EditApp=()=>{
             console.log("openSelector")
             selectElement("openSelector", "true")
         }
-        if(reject==true){
-            console.log("its true")
-            selectElement("rejectSelector", "true")
-        }else{
-            console.log("reject:", reject);
-        }
+        
 
         
     },[])
@@ -80,7 +73,6 @@ const EditApp=()=>{
             offer: offer,
             phone: phone,
             interview: interview,
-            reject: reject,
             open: open
 
         }
@@ -125,8 +117,6 @@ const EditApp=()=>{
             setInterview(getTrueFalse(bool));
         }else if(category==="phone"){
             setPhone(getTrueFalse(bool));
-        }else if(category==="rejection"){
-            setRejection(getTrueFalse(bool));
         }else if(category==="open"){
             setOpen(getTrueFalse(bool));
         }else if(category==="offer"){
@@ -198,17 +188,6 @@ const EditApp=()=>{
                             onChange={(e)=>setBool("offer", e.target.value)} 
                             class="select-field"
                             id="offerSelector">
-                            <option value="true">Yes</option>
-                            <option value="false">No</option>
-                        </select>
-                    </label>
-                    <label for="field8"><span>Rejection</span>
-                        <select 
-                            name="field8" 
-                            value={reject}
-                            onChange={(e)=>setBool("rejection", e.target.value)} 
-                            class="select-field"
-                            id="rejectSelector">
                             <option value="true">Yes</option>
                             <option value="false">No</option>
                         </select>

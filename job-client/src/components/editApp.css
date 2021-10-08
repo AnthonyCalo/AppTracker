@@ -89,14 +89,14 @@
 .submitBtn{
     width: 100px;
     height: 50px;
-    background-color: green;
+    background-color: blue;
     color: white;
     font-size: 1.4em;
     border: 3px solid;
     border-color: black;
 }
 .submitBtn:hover{
-    color: green;
+    color: blue;
     background-color: white;
     cursor: pointer;
 

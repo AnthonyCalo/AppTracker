@@ -13,7 +13,6 @@ const JobPost=()=>{
             notes: notes,
             offer: offer,
             phoneScreen: phone,
-            rejection: reject,
             interview: interview,
             open: open
         }
@@ -34,7 +33,6 @@ const JobPost=()=>{
     const [notes, setNotes] = useState("");
     const [interview, setInterview] = useState(false);
     const [phone, setPhone] = useState(false);
-    const [reject, setRejection] = useState(false);
     const [offer, setOffer] = useState(false);
     const [open, setOpen] = useState(true);
     
@@ -51,8 +49,6 @@ const JobPost=()=>{
             setInterview(getTrueFalse(bool));
         }else if(category==="phone"){
             setPhone(getTrueFalse(bool));
-        }else if(category==="rejection"){
-            setRejection(getTrueFalse(bool));
         }else if(category==="open"){
             setOpen(getTrueFalse(bool));
         }else if(category==="offer"){
@@ -65,7 +61,7 @@ const JobPost=()=>{
             <div class="innerForm">
                 <h2 className="formTitle">Create New Job</h2>
                 <hr/>
-                <form onSubmit={handleSubmit}>
+                <form>
                 <label for="field1"><span>Company Name<span class="required">*</span></span>
                     <input 
                         type="text"
@@ -110,12 +106,6 @@ const JobPost=()=>{
                             <option value="false">No</option>
                         </select>
                     </label>
-                    <label for="field6"><span>Rejection</span>
-                        <select name="field6" value={reject} onChange={(e)=>setBool("rejection",e.target.value)} class="select-field">
-                            <option value="true">Yes</option>
-                            <option value="false">No</option>
-                        </select>
-                    </label>
                 </div>
                 <label for="field6"><span>Open</span>
                     <select name="field6" value={open} onChange={(e)=>setBool("open",e.target.value)} class="select-field">
@@ -131,8 +121,10 @@ const JobPost=()=>{
                         onChange={(e)=>{setNotes(e.target.value)}}
                     ></textarea>
                 </label>
-                
-                <button type="submit" className="submitBtn">Submit</button>
+                <div className="buttonDiv">
+                <button onClick={handleSubmit} className="submitBtn ">Submit</button>
+                <button onClick={()=>{document.getElementById("dashLink").click()}} className="submitBtn cancelBtn">Discard</button>
+                </div>
 
             </form>
             </div>

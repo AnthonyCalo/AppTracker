@@ -149,7 +149,7 @@ app.route("/login")
             if(!err){
 
                 passport.authenticate("local")(req,res, ()=>{
-                        res.send("success");
+                        res.send('success');
                     })
                 }
             })

@@ -15,20 +15,9 @@ const HomeContainer=()=>{
                 <Link to="/login"><button className="getStartedBtn">Click here to Signin/ Register</button></Link>
                 <br/>
 
-                <img src="/images/placeholderImg.PNG" className="homeScreenshotImg"></img>
 
             </div>
-            <div className="section2">
-            <h1>View data in your dashboard</h1>
-            <p>Track response data interviews</p>
-            <p>Dashboard shows you percentage of applications that recieve hits. Lets you know how often interviews convert to an offer</p>
-            <img src="/images/dashboardPH.PNG" className="dashBoardImg"></img>
-            </div>
-            <div className="section3">
-            <h1>Easy to update and insert data</h1>
-            <img src="/images/dashboardPH.PNG" className="dashBoardImg"></img>
-            <h1>Secure password protected</h1>
-            </div>
+           
             
             
             

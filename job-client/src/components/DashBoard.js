@@ -3,6 +3,7 @@ import axios from "axios";
 import "./Dashboard.css"
 import {Link} from "react-router-dom";
 import Stats from "./Stats";
+import Filter from './Filter';
 
 const Dashboard=()=>{
     function sortByProperty(property){  
@@ -111,21 +112,24 @@ const Dashboard=()=>{
             <Stats jobs={jobs} />
             <hr />
             <Link to="/new-job"><button className="createBtn"><span className="plus">&#43;</span>Create New</button></Link>
-        <div class="tableFixHead">
-        <table>
-        <thead>
-          <tr>
-            <th className="sortableHeader" id="compHeader" onClick={(e)=>setProperty('company')}>Company&#9660;</th>
-            <th className="sortableHeader" id="jobTitleHeader" onClick={(e)=>setProperty('jobTitle')}>Job Title</th>
-            <th className="sortableHeader" id="dateHeader" onClick={(e)=>setProperty('date')}>Date</th>
-            <th>Open</th>
-            <th>Edit</th>
-          </tr>
-        </thead>
-        <tbody>
-        {renderJobs(sortProperty)}
-        </tbody>
-      </table>
+        <div className="filterTableDiv">
+            <Filter jobs={jobs}/>
+            <div class="tableFixHead">
+            <table>
+            <thead>
+            <tr>
+                <th className="sortableHeader" id="compHeader" onClick={(e)=>setProperty('company')}>Company&#9660;</th>
+                <th className="sortableHeader" id="jobTitleHeader" onClick={(e)=>setProperty('jobTitle')}>Job Title</th>
+                <th className="sortableHeader" id="dateHeader" onClick={(e)=>setProperty('date')}>Date</th>
+                <th>Open</th>
+                <th>Edit</th>
+            </tr>
+            </thead>
+            <tbody>
+            {renderJobs(sortProperty)}
+            </tbody>
+        </table>
+        </div>
       </div>
 
             

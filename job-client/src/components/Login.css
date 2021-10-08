@@ -1,0 +1,113 @@
+.main-head{
+    height: 150px;
+    background: #FFF;
+   
+}
+
+.sidenav {
+    height: 100vh;
+    background-color: rgb(40, 122, 149);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    z-index: 3;
+    margin-top: 75px;
+}
+
+
+.main {
+    padding: 0px 10px;
+    overflow: hidden;
+    font-size: 1.4em;
+
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav{
+        display: none;
+    }
+    .main{
+        margin-top: 75px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .login-form{
+        margin-top: 10%;
+    }
+
+    .register-form{
+        margin-top: 10%;
+    }
+    .sidenav{
+        display: none;
+    }
+    .main{
+        margin-top: 75px;
+    }
+}
+
+@media screen and (min-width: 768px){
+    .main{
+        margin-left: 40%; 
+    }
+
+    .sidenav{
+        width: 40%;
+        position: fixed;
+        z-index: 2;
+        top: 0;
+        left: 0;
+    }
+
+    .login-form{
+        margin-top: 80%;
+        overflow: hidden;
+
+    }
+
+    .register-form{
+        margin-top: 20%;
+    }
+}
+
+.example{
+    color: white;
+    font-weight: bold;
+    line-height: auto;
+}
+.login-main-text{
+    padding: 60px;
+    color: #fff;
+    margin-bottom: 300px;
+}
+
+.login-main-text h2{
+    font-weight: 300;
+}
+.login-form{
+    overflow: hidden;
+}
+
+.btn-black{
+    background-color: #000 !important;
+    color: #fff;
+}
+.logRegDiv{
+    margin-left: 10%;
+    height: 70vh;
+}
+.clickHere{
+    color:blue;
+    text-decoration:underline;
+}
+.clickHere:hover{
+    cursor: pointer;
+}
+.fab{
+    margin-right: 5px;
+}
+.demoSpan{
+    color: blue;
+}
