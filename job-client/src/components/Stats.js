@@ -13,6 +13,7 @@ const Stats=(props)=>{
         setOpen(0);
 
     },[]);
+    console.log(props);
     var total_apps = props.jobs.length
     const getBoolStats=()=>{
         

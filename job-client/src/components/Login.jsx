@@ -8,68 +8,103 @@ const Login=()=>{
     const [registerUser, setRegisterUser] = useState("");
     const [registerPass, setRegisterPass]=useState('');
     const [logReg, setLogReg] = useState(true);
+    const [warnState, setWarnState] = useState("none");
 
-
-    useEffect(()=>{
-        checkSignIn();
-    }, [])
+    // useEffect(()=>{
+    //     checkSignIn();
+    // }, [])
     const login=()=>{
-        axios({
+        fetch("https://job-app-tracker-calo.herokuapp.com/login", {
             method: "POST",
-            data: {
+            body: JSON.stringify({
                 username: userName,
                 password: pass
-            },
-            withCredentials: true,
-            url: "http://localhost:3001/login"
-        }).then(response=>{
-            if(response.data==='success'){
-                //reload page if server sends login successful message
-                window.location.reload();
-            }else{
-                console.log("bad pass");
-            }
-        })
+            }),
+            headers: {'Content-Type': 'application/json',
+                        "Accept": 'application/json',
+                        'Access-Control-Allow-Origin': 'https://job-app-tracker-calo.herokuapp.com/' },
+            credentials: 'include',
+        }).then(response=>response.json())
+        .then(data=>{
+                
+                console.log(data, "DATA");
+                // if(response.data==='success'){
+                //     console.log("SUCCESSFUL LOGIN ATTEMPT ")
+                //     //reload page if server sends login successful message
+                //     window.location.reload();
+                // }else{
+                //     setWarnState("badUserPass");
+                // }
+            })
     };
     const register=()=>{
-        fetch("http://localhost:3001/register", {
+        fetch("https://job-app-tracker-calo.herokuapp.com/register", {
             method: 'POST',
             headers: {'Content-Type': 'application/json',
-                        "Accept": 'application/json' },
+                        "Accept": 'application/json',
+                        'Access-Control-Allow-Origin': 'https://job-app-tracker-calo.herokuapp.com/' },
             body:JSON.stringify({
                 username: registerUser,
                 password: registerPass
             })
         })
-        .then(response=>response.json())
+        .then(response=>{
+            return ( response.json())
+        })
         .then(body=>{
-            console.log(body.message);
+            console.log("BODY")
+            console.log(body.name)
+            if(body.name==="UserExistsError"){
+                setWarnState("userExists")
+            }
+        }).catch(err=>{
+            setWarnState('otha');
         })
     };
-    const checkSignIn=()=>{
-        axios.get("http://localhost:3001/signedin",{
-            withCredentials: true,
-            headers: {
-                "Content-Type": 'application/json'
-            }
-        }).then(response=>{
-            //respons.data ===false when not signed in 
-            if(response.data===false){
-                return(false);
-            }else{
-                //this timeout is because it takes a milisecond(estimate) for homeNav to load the dashLink if signedIn
-                //if user's signed in redirect to dashboard
-                setTimeout(()=>{
-                    let dashLink= document.getElementById("dashLink");
-
-                    console.log(dashLink);
-                    if(dashLink){
-                        document.getElementById('dashLink').click();
-                    }
-                },100)
+    // const checkSignIn=()=>{
+    //     axios.get("https://job-app-tracker-calo.herokuapp.com/signedin",{
+    //         credentials: 'include',
+    //         headers: {'Content-Type': 'application/json',
+    //             "Accept": 'application/json',
+    //             'Access-Control-Allow-Origin': 'https://job-app-tracker-calo.herokuapp.com/' 
+    //             }
+    //     }).then(response=>{
+    //         //respons.data ===false when not signed in 
+    //         if(response.data===false){
+    //             return(false);
+    //         }else{
+    //             //this timeout is because it takes a milisecond(estimate) for homeNav to load the dashLink if signedIn
+    //             //if user's signed in redirect to dashboard
+    //             setTimeout(()=>{
+    //                 let dashLink= document.getElementById("dashLink");
+    //                 if(dashLink){
+    //                     document.getElementById('dashLink').click();
+    //                 }
+    //             },100)
          
-            }
-        })
+    //         }
+    //     })
+    // }
+    const renderWarn=(warning)=>{
+        if(warnState==="none"){
+            return;
+        }else if(warnState==="userExists"){
+            return (
+                <h3>Choose a new username. User already exists</h3>
+            )
+        }else if(warnState==="badPass"){
+            return (
+                <h3>Choose a new username. User already exists</h3>
+            )
+        }else if(warnState==="badPass"){
+            return (
+                <h3>incorrect username or password</h3>
+            )
+        }else{
+            return( 
+                <h3>User {registerUser} added. Please login</h3>
+            );
+        }
     }
 
     const renderLogin=()=>{
@@ -94,10 +129,13 @@ const Login=()=>{
                         onChange={e=>setRegisterPass(e.target.value)}
                         />
                 </div>
+                <div className="warning">
+                        {renderWarn()}
+                </div>
                 <button className="ui button" onClick={register}>Register</button>
                 <div class="card-body">
-                <a href="http://localhost:3001/auth/google/">
-                    <button className="ui red google button" href="http://localhost:3001/auth/google/" role="button">
+                <a href="https://job-app-tracker-calo.herokuapp.com/auth/google/">
+                    <button className="ui red google button" href="https://job-app-tracker-calo.herokuapp.com/auth/google/" role="button">
                         <i class="fab fa-google"></i>
                         Sign Up with Google
                     </button>
@@ -134,10 +172,13 @@ const Login=()=>{
                             className="form-control"    
                             />
                     </div>
+                    <div className="warning">
+                        <h3>{renderWarn()}</h3>
+                    </div>
                     <button className="ui button" onClick={login}>Login</button>
                     <div className="card-body">
-                    <a href="http://localhost:3001/auth/google/">
-                        <button className="ui red google button" href="http://localhost:3001/auth/google/" role="button">
+                    <a href="https://job-app-tracker-calo.herokuapp.com/auth/google/">
+                        <button className="ui red google button" href="https://job-app-tracker-calo.herokuapp.com/auth/google/" role="button">
                             <i class="fab fa-google"></i>
                             Sign In with Google
                         </button>
@@ -168,7 +209,9 @@ const Login=()=>{
       <div class="main">
          <div class="col-lg-4 logRegDiv">
                {renderLogin()}
+ 
          </div>
+         
       </div>
     </>
 

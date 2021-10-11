@@ -10,23 +10,31 @@ import axios from 'axios';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App =()=>{
+    console.log = console.warn = console.error = () => {};
     const [auth, setAuth] = useState(false)
     const checkSignIn=()=>{
-        console.log("called");
-        axios.get("http://localhost:3001/signedin",{
-            withCredentials: true,
-            headers: {
-                "Content-Type": 'application/json'
-            }
-        }).then(response=>{
+        fetch("https://job-app-tracker-calo.herokuapp.com/signedin", {
+            method: "GET",
+            headers: {'Content-Type': 'application/json',
+                "Accept": 'application/json',
+                'Access-Control-Allow-Origin': 'https://job-app-tracker-calo.herokuapp.com/' 
+                },
+            credentials: 'include'
+
+
+        }).then(response=>response.json())
+        .then(data=>{
             //respons.data ===false when not signed in 
-            if(response.data===false){
-                console.log("here");
-                setAuth(false);
+            console.log(data);
+            if(data===false){
+                setAuth(false)
             }else{
-                setAuth(true)
+                setAuth(true);
             }
-        })
+        }).catch(err=>{
+            console.log("pussy");
+            console.log(err)});
+            
     }
     useEffect(()=>{
         checkSignIn();

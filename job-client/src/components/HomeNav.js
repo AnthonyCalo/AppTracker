@@ -8,10 +8,12 @@ const HomeNavBar = (props) => {
     
     const signOut = ()=>{
         //simple logout
-        axios.get("http://localhost:3001/logout",{
+        fetch("https://job-app-tracker-calo.herokuapp.com/logout",{
+            method: "GET",
             withCredentials: true,
             headers: {
-                "Content-Type": 'application/json'
+                "Content-Type": 'application/json',
+                'Access-Control-Allow-Origin': 'https://job-app-tracker-calo.herokuapp.com/'
             }
         }).then(response=>{
             //reload the page to call a use effect that will register signout

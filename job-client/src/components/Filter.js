@@ -4,7 +4,7 @@ import {useState, useEffect} from 'react';
 const Filter=(props)=>{
     const [open, setOpen]=useState(true);
     const [closed, setClosed]=useState(true);
-    const [sortProperty, setProperty]=useState('date');
+    const [sortProperty, setProperty]=useState('company');
 
     const handleSortPropertyChange=(value)=>{
         setProperty(value);

@@ -8,7 +8,7 @@ import Filter from './Filter';
 const Dashboard=()=>{
 //UseState Hooks_____________________________________________________________________________________
     const [jobs, setJobs] = useState([]);
-    const [sortProperty, setProperty]=useState('date');
+    const [sortProperty, setProperty]=useState('company');
     const [openFilter, setOpenFilter]=useState('both');
     
 //Sub Functions_____________________________________________________________________________________
@@ -23,14 +23,19 @@ const Dashboard=()=>{
         }  
     }
     const getUserJobs=()=>{
-        axios.get("http://localhost:3001/user-jobs",{
+        fetch("https://job-app-tracker-calo.herokuapp.com/user-jobs",{
+            method: "GET",
             withCredentials: true,
-            headers: {
-                "Content-Type": 'application/json'
+            headers: {'Content-Type': 'application/json',
+                "Accept": 'application/json',
+                'Access-Control-Allow-Origin': 'https://job-app-tracker-calo.herokuapp.com/' 
             }
-        }).then(response=>{
-            //reload the page to call a use effect that will register signout
-            setJobs(response.data);
+        }).then(response=>response.toString())
+        .then(data=>{
+            console.log(data);
+        }
+        ).catch(err=>{
+            console.log(err);
         })
     }
     const openFilterFunction=(filterObject)=>{

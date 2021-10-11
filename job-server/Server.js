@@ -23,10 +23,7 @@ app.use(
 )
 
 app.use(
-    cors({
-      origin: "http://localhost:3000", // <-- location of the react app 
-      credentials: true,
-    })
+    cors()
   );
 app.use(express.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -43,7 +40,7 @@ app.use(passport.session());
 
 
 //connect to mongoose database
-mongoose.connect("mongodb://localhost:27017/jobsDB", {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect("mongodb+srv://Tony:TwWWcckHyLb31bzp@cluster0.4tckt.mongodb.net/jobsDB", {useNewUrlParser: true, useUnifiedTopology: true});
 
 //DB schema. User pass and stock list
 const userSchema = new mongoose.Schema({
@@ -87,18 +84,18 @@ passport.use(User.createStrategy());
 
 //copied from  passportJS docs. This will work with every strategy for serializing/ deserializing users
 passport.serializeUser(function(user, done){
-    done(null, user.id);
+    return (done(null, user.id));
 });
 passport.deserializeUser(function(id, done) {
     User.findById(id, function(err, user) {
-      done(err, user);
+      return (done(err, user));
     });
   });
 
 //googleOauth
 passport.use(new GoogleStrategy({
-    clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
+    clientID: '374142364789-qj5idkrs1nprsddeccrv1ks6u24g9j20.apps.googleusercontent.com',
+    clientSecret: 'GOCSPX-jDG-yZ5QobwJhAGCDpri0EQhOIN',
     callbackURL: "http://localhost:3001/auth/google/jobs",
     userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo'
   },
@@ -119,7 +116,7 @@ app.post("/register", (req,res)=>{
             })
         }else{
             console.log(err);
-            res.redirect("/login");
+            res.send(err);
         }
     })
     
@@ -134,6 +131,10 @@ app.get("/auth/google/jobs",
 passport.authenticate('google', {failureRedirect: 'http://localhost:3000/login'}), function(req, res){
     res.redirect("http://localhost:3000/dashboard");
 })
+app.get("/test", (req, res)=>{
+    res.send("Test successful");
+})
+
 //login with passport local strategy    
 app.route("/login")
     .post((req, res)=>{
@@ -147,10 +148,12 @@ app.route("/login")
             console.log("AT the login");
             if (err) console.log(err);
             if(!err){
-
                 passport.authenticate("local")(req,res, ()=>{
                         res.send('success');
+
                     })
+                }else{
+                    res.send("failed")
                 }
             })
     });
@@ -226,9 +229,12 @@ app.post("/delete-job", (req, res)=>{
 app.get("/signedin", function(req, res){
     //req.isauthenticated works because client axios sends withCrenentials
     //passport method checks if user is signed in 
-    if(req.isAuthenticated()){
         console.log(req.user);
-        console.log(typeof(req.user._id));
+        console.log(req.body);
+        console.log(req.user, "_____REQUEST USER HERE");
+
+    if(req.isAuthenticated()){
+        
         res.send(req.user);
     }else{
         console.log("not Signed")
@@ -242,7 +248,7 @@ app.get("/logout", function(req, res){
 })
 
 
-app.listen(3001, ()=>{
+app.listen(process.env.PORT || 3001, ()=>{
     console.log("Server started on port 3001");
 })
 
