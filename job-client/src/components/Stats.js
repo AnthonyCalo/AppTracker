@@ -12,7 +12,7 @@ const Stats=(props)=>{
         setOffers(0);
         setOpen(0);
 
-    },[]);
+    },[props.jobs]);
     console.log(props);
     var total_apps = props.jobs.length
     const getBoolStats=()=>{

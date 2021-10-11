@@ -10,28 +10,39 @@ const passportLocalMongoose = require('passport-local-mongoose');
 const bcrypt = require('bcryptjs');
 const cookieSession= require("cookie-session");
 const findOrCreate = require('mongoose-findorcreate');
+const FileStore = require('session-file-store')(session);
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 
 const app=express();
 
+//LFG. express session wasn't working without this and sameSite: 'none' in production
+//worked locally. But cors issues and req.user would be blank
+app.enable('trust proxy');
+
 app.use(
     cookieSession({
         maxAge: 30 *24 *60*60*1000,
-        keys: ['fkfjeoinoeasdfanieojh']
+        keys: ['fkfjeoinoeasdfanieojh'],
+        sameSite: "none"
     })
 )
 
 app.use(
-    cors()
+    cors({
+      origin: "http://localhost:3000", // <-- location of the react app 
+      credentials: true,
+    })
   );
 app.use(express.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 app.use(session({
+    store: new FileStore,
     secret: 'placeholderSecret',
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: { secure: true }
 }));
 //middle ware required to initialize passport
 app.use(passport.initialize());
@@ -40,7 +51,7 @@ app.use(passport.session());
 
 
 //connect to mongoose database
-mongoose.connect("mongodb+srv://Tony:TwWWcckHyLb31bzp@cluster0.4tckt.mongodb.net/jobsDB", {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(`mongodb+srv://${process.env.MONGO_U}:${process.env.MONGO_P}.mongodb.net/jobsDB`, {useNewUrlParser: true, useUnifiedTopology: true});
 
 //DB schema. User pass and stock list
 const userSchema = new mongoose.Schema({
@@ -84,19 +95,19 @@ passport.use(User.createStrategy());
 
 //copied from  passportJS docs. This will work with every strategy for serializing/ deserializing users
 passport.serializeUser(function(user, done){
-    return (done(null, user.id));
+    done(null, user.id);
 });
 passport.deserializeUser(function(id, done) {
     User.findById(id, function(err, user) {
-      return (done(err, user));
+      done(err, user);
     });
   });
 
 //googleOauth
 passport.use(new GoogleStrategy({
-    clientID: '374142364789-qj5idkrs1nprsddeccrv1ks6u24g9j20.apps.googleusercontent.com',
-    clientSecret: 'GOCSPX-jDG-yZ5QobwJhAGCDpri0EQhOIN',
-    callbackURL: "http://localhost:3001/auth/google/jobs",
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: "https://job-app-tracker-calo.herokuapp.com/auth/google/jobs",
     userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo'
   },
   //accessToken is what lets me get data of user from google. profile contains the info. 
@@ -116,7 +127,7 @@ app.post("/register", (req,res)=>{
             })
         }else{
             console.log(err);
-            res.send(err);
+            res.redirect("/login");
         }
     })
     
@@ -131,10 +142,6 @@ app.get("/auth/google/jobs",
 passport.authenticate('google', {failureRedirect: 'http://localhost:3000/login'}), function(req, res){
     res.redirect("http://localhost:3000/dashboard");
 })
-app.get("/test", (req, res)=>{
-    res.send("Test successful");
-})
-
 //login with passport local strategy    
 app.route("/login")
     .post((req, res)=>{
@@ -143,17 +150,14 @@ app.route("/login")
             username: req.body.username,
             password: req.body.password
         })
-    
+        console.log(user);
         req.login(user, function(err){
-            console.log("AT the login");
             if (err) console.log(err);
             if(!err){
+
                 passport.authenticate("local")(req,res, ()=>{
                         res.send('success');
-
                     })
-                }else{
-                    res.send("failed")
                 }
             })
     });
@@ -229,12 +233,11 @@ app.post("/delete-job", (req, res)=>{
 app.get("/signedin", function(req, res){
     //req.isauthenticated works because client axios sends withCrenentials
     //passport method checks if user is signed in 
-        console.log(req.user);
-        console.log(req.body);
-        console.log(req.user, "_____REQUEST USER HERE");
-
+    console.log(req, "request");
+    console.log(req.user, "req.user");
     if(req.isAuthenticated()){
-        
+        console.log(req.user);
+        console.log(typeof(req.user._id));
         res.send(req.user);
     }else{
         console.log("not Signed")
@@ -243,12 +246,15 @@ app.get("/signedin", function(req, res){
 })
 app.get("/logout", function(req, res){
     //all thats needed to logout is .logout method from passport
+    console.log(req.user, "logout Request");
     req.logout();
+    // req.session.destroy( function ( err ) {
+    //     res.send( { message: 'Successfully logged out' } );
+    // })
     res.send("signed out");
 })
 
 
-app.listen(process.env.PORT || 3001, ()=>{
+app.listen(process.env.PORT ||3001, ()=>{
     console.log("Server started on port 3001");
 })
-

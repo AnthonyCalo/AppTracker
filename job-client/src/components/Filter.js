@@ -67,14 +67,14 @@ const Filter=(props)=>{
                 <option value="date">Date</option>
             </select>
             <div className="filterTitle">
-            <h3>Status</h3>
+            <h3 className="filterH3">Status</h3>
             </div>
             <div id="checkboxes">
                 <label for="openFilter" className="openFilter">
-                    <input type="checkbox"  id="openFilter" checked={open} onChange={(e)=>{handleChange(e.target.value)}} value="open"/>Open
+                    <input type="checkbox" className="filterCheck" id="openFilter" checked={open} onChange={(e)=>{handleChange(e.target.value)}} value="open"/>Open
                 </label>
                 <label for="two">
-                    <input type="checkbox" id="closedFilter" checked={closed} value="closed" onChange={(e)=>{handleChange(e.target.value)}}/>Closed
+                    <input type="checkbox" className="filterCheck" id="closedFilter" checked={closed} value="closed" onChange={(e)=>{handleChange(e.target.value)}}/>Closed
                 </label>
             </div>
         </div>

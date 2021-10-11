@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import Stats from "./Stats";
 import Filter from './Filter';
 
-const Dashboard=()=>{
+const Dashboard=(props)=>{
 //UseState Hooks_____________________________________________________________________________________
     const [jobs, setJobs] = useState([]);
     const [sortProperty, setProperty]=useState('company');
@@ -23,34 +23,30 @@ const Dashboard=()=>{
         }  
     }
     const getUserJobs=()=>{
-        fetch("https://job-app-tracker-calo.herokuapp.com/user-jobs",{
-            method: "GET",
+        axios.get("https://job-app-tracker-calo.herokuapp.com/user-jobs",{
             withCredentials: true,
-            headers: {'Content-Type': 'application/json',
-                "Accept": 'application/json',
-                'Access-Control-Allow-Origin': 'https://job-app-tracker-calo.herokuapp.com/' 
+            headers: {
+                "Content-Type": 'application/json'
             }
-        }).then(response=>response.toString())
-        .then(data=>{
-            console.log(data);
-        }
-        ).catch(err=>{
-            console.log(err);
+        }).then(response=>{
+            //reload the page to call a use effect that will register signout
+            setJobs(response.data);
         })
     }
     const openFilterFunction=(filterObject)=>{
         console.log(filterObject);
-        setOpenFilter(filterObject)
+        setOpenFilter(filterObject);
     }
     //
     const filterHandleSort=(value)=>{
-        console.log('called');
         setProperty(value);
     }
+    //Props function for new Job App
 //useEffect Hooks_________________________________________________________________________________________________
     useEffect(()=>{
+        console.log("UPDATE JOBS CALLED IN dash");
         getUserJobs()
-    }, [])
+    }, [props.updateJobs])
     useEffect(()=>{
         let companyHeader = document.getElementById("compHeader");
         let jobHeader = document.getElementById("jobTitleHeader");
@@ -119,7 +115,6 @@ const Dashboard=()=>{
                         }
                     case "closed":
                         if(job.open===false){
-                            console.log(job);
                             if(counter%2===0 || counter===0){
                                 counter++;
                                 return(
@@ -150,7 +145,6 @@ const Dashboard=()=>{
                             }
                     case "open":
                         if(job.open===true){
-                            console.log(job);
                             if(counter%2===0 || counter===0){
                                 counter++;
                                 return(

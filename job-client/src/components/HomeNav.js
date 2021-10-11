@@ -8,16 +8,18 @@ const HomeNavBar = (props) => {
     
     const signOut = ()=>{
         //simple logout
-        fetch("https://job-app-tracker-calo.herokuapp.com/logout",{
-            method: "GET",
+        axios.get("https://job-app-tracker-calo.herokuapp.com/logout",{
             withCredentials: true,
             headers: {
-                "Content-Type": 'application/json',
-                'Access-Control-Allow-Origin': 'https://job-app-tracker-calo.herokuapp.com/'
+                "Content-Type": 'application/json'
             }
         }).then(response=>{
             //reload the page to call a use effect that will register signout
-            window.location.reload();
+            //window.location.reload();
+            console.log(response);
+            if(response.data==="signed out"){
+                window.location.reload()
+            }
         })
     }
     const renderHome=()=>{

@@ -1,10 +1,12 @@
 import axios from 'axios';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import "./formApp.css"
 
-const JobPost=()=>{
+const JobPost=(props)=>{
+    useEffect(()=>{
+        document.getElementById('field1').focus();
+    }, [])
     const handleSubmit=(event)=>{
-        console.log("HERE SUBMITTED FORM")
         event.preventDefault();
         let payload = {
             company: company,
@@ -17,7 +19,7 @@ const JobPost=()=>{
             open: open
         }
         console.log(payload);
-        axios("http://localhost:3001/job-app",{
+        axios("https://job-app-tracker-calo.herokuapp.com/job-app",{
             method: "POST",
             data: payload,
             withCredentials: true,
@@ -25,6 +27,7 @@ const JobPost=()=>{
                 "Content-Type": 'application/json'
             }
         });
+        props.updateJobsDash();
         document.getElementById("dashLink").click();
     }
     const [company, setCompany] = useState("");
@@ -68,7 +71,10 @@ const JobPost=()=>{
                         class="input-field"
                         name="field1"
                         value={company}
-                        onChange={(e)=>{setCompany(e.target.value)}} /></label>
+                        onChange={(e)=>{setCompany(e.target.value)}} 
+                        id="field1"
+                        autofocus    
+                        /></label>
                 <label for="field2">
                     <span>Job Title <span class="required">*</span></span>
                     <input 

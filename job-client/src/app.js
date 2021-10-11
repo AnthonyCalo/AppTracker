@@ -10,35 +10,38 @@ import axios from 'axios';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App =()=>{
-    console.log = console.warn = console.error = () => {};
-    const [auth, setAuth] = useState(false)
+    const [auth, setAuth] = useState(false);
+    const [updateJobs, setUpateJobs]=useState(1);
     const checkSignIn=()=>{
-        fetch("https://job-app-tracker-calo.herokuapp.com/signedin", {
-            method: "GET",
-            headers: {'Content-Type': 'application/json',
-                "Accept": 'application/json',
-                'Access-Control-Allow-Origin': 'https://job-app-tracker-calo.herokuapp.com/' 
-                },
-            credentials: 'include'
-
-
-        }).then(response=>response.json())
-        .then(data=>{
-            //respons.data ===false when not signed in 
-            console.log(data);
-            if(data===false){
-                setAuth(false)
-            }else{
-                setAuth(true);
+        console.log("called");
+        axios.get("https://job-app-tracker-calo.herokuapp.com/signedin",{
+            withCredentials: true,
+            headers: {
+                "Content-Type": 'application/json'
             }
-        }).catch(err=>{
-            console.log("pussy");
-            console.log(err)});
-            
+        }).then(response=>{
+            //respons.data ===false when not signed in 
+            if(response.data===false){
+                console.log("here");
+                setAuth(false);
+            }else{
+                setAuth(true)
+            }
+        })
     }
     useEffect(()=>{
         checkSignIn();
-    })
+    }, [])
+    //props functions for dash/ create/ edit
+    const updateJobsDash=()=>{
+        console.log("called update from app.js");
+        setTimeout(()=>{
+            setUpateJobs(updateJobs+1);
+
+        },20)
+    }
+
+
     // function sortByProperty(property){  
     //     return function(a,b){  
     //        if(a[property] > b[property])  
@@ -69,14 +72,14 @@ const App =()=>{
             <Route exact path="/">
                     <HomeContainer />
             </Route>
-            <Route exact path="/new-job">
-                <JobPost />
-            </Route>
             <Route exact path="/login">
-                <Login />
+                <Login/>
             </Route>
-            <ProtectedRoute exact path="/dashboard" component={Dashboard} isAuth={auth} />
-            <ProtectedRoute exact path="/jobs/:id" component={EditApp} isAuth={auth} />
+            <Route exact path="/new-job">
+                <JobPost updateJobsDash={updateJobsDash}/>
+            </Route>
+            <ProtectedRoute exact path="/dashboard" component={Dashboard} updateJobs={updateJobs} isAuth={auth} />
+            <ProtectedRoute exact path="/jobs/:id" component={EditApp} updateJobsDash={updateJobsDash} isAuth={auth} />
             </Switch>
         </Router>
         

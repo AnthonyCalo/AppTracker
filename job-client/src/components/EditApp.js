@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import React, {useState, useEffect} from 'react';
 import "./editApp.css";
 
-const EditApp=()=>{
+const EditApp=(props)=>{
     //useState hooks. Also form values
     const [company, setCompany] = useState("");
     const [jobTitle, setJobTitle] = useState("");
@@ -19,7 +19,7 @@ const EditApp=()=>{
     const getJob= async()=>{
         console.log("function called")
         console.log(params.id);
-        axios("http://localhost:3001/onejob",{
+        axios("https://job-app-tracker-calo.herokuapp.com/onejob",{
                 method: "POST",
                 data:{
                     jobId: params.id
@@ -75,7 +75,7 @@ const EditApp=()=>{
 
         }
         console.log(payload);
-        axios("http://localhost:3001/update-job",{
+        axios("https://job-app-tracker-calo.herokuapp.com/update-job",{
             method: "POST",
             data: payload,
             withCredentials: true,
@@ -83,6 +83,7 @@ const EditApp=()=>{
                 "Content-Type": 'application/json'
             }
         });
+        props.updateJobsDash();
         document.getElementById("dashLink").click();
 
     }
@@ -91,7 +92,7 @@ const EditApp=()=>{
         let payload={
             id: params.id
         }
-        axios("http://localhost:3001/delete-job",{
+        axios("https://job-app-tracker-calo.herokuapp.com/delete-job",{
             method: "POST",
             data: payload,
             withCredentials: true,
@@ -99,6 +100,7 @@ const EditApp=()=>{
                 "Content-Type": 'application/json'
             }
         });
+        props.updateJobsDash();
         document.getElementById("dashLink").click();
     }
 
