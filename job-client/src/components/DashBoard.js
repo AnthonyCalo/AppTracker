@@ -44,7 +44,6 @@ const Dashboard=(props)=>{
     //Props function for new Job App
 //useEffect Hooks_________________________________________________________________________________________________
     useEffect(()=>{
-        console.log("UPDATE JOBS CALLED IN dash");
         getUserJobs()
     }, [props.updateJobs])
     useEffect(()=>{

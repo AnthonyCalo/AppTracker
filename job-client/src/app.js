@@ -38,7 +38,7 @@ const App =()=>{
         setTimeout(()=>{
             setUpateJobs(updateJobs+1);
 
-        },20)
+        },100)
     }
 
 

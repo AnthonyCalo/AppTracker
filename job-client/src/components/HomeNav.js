@@ -4,7 +4,6 @@ import {useState, useEffect} from 'react';
 import axios from "axios";
 
 const HomeNavBar = (props) => {
-    const [user, setUser]= useState("")
     
     const signOut = ()=>{
         //simple logout
@@ -27,7 +26,7 @@ const HomeNavBar = (props) => {
             return ( 
                 <header className='navbar'>
                     <div className='navbar__title navbar__item'><Link to="/">Free Job Tracker</Link></div>
-                    <div className='navbar__item'><Link to="/dashboard" id="dashLink">{user} DashBoard</Link></div>
+                    <div className='navbar__item'><Link to="/dashboard" id="dashLink">DashBoard</Link></div>
                     <div className='navbar__item'><Link onClick={signOut}>Logout</Link></div>        
 
                 </header>
