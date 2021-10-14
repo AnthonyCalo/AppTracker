@@ -30,7 +30,7 @@ app.use(
 
 app.use(
     cors({
-      origin: "http://localhost:3000", // <-- location of the react app 
+      origin: "https://apptracker.us", // <-- location of the react app 
       credentials: true,
     })
   );
@@ -51,7 +51,7 @@ app.use(passport.session());
 
 
 //connect to mongoose database
-mongoose.connect(`mongodb+srv://${process.env.MONGO_U}:${process.env.MONGO_P}.mongodb.net/jobsDB`, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(`mongodb+srv://Tony:IEd2HWpJAz7TfXe7@cluster0.4tckt.mongodb.net/jobsDB`, {useNewUrlParser: true, useUnifiedTopology: true});
 
 //DB schema. User pass and stock list
 const userSchema = new mongoose.Schema({
@@ -105,14 +105,13 @@ passport.deserializeUser(function(id, done) {
 
 //googleOauth
 passport.use(new GoogleStrategy({
-    clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
+    clientID: '374142364789-qj5idkrs1nprsddeccrv1ks6u24g9j20.apps.googleusercontent.com',
+    clientSecret: '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',
     callbackURL: "https://job-app-tracker-calo.herokuapp.com/auth/google/jobs",
     userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo'
   },
   //accessToken is what lets me get data of user from google. profile contains the info. 
   function(accessToken, refreshToken, profile, cb) {
-    console.log("HERE!!!: " + profile.id);
     User.findOrCreate({ googleId: profile.id }, function (err, user) {
       return cb(err, user);
     });
@@ -123,11 +122,10 @@ app.post("/register", (req,res)=>{
     User.register({username: req.body.username}, req.body.password, function(err, user){
         if(!err){
             passport.authenticate("local")(req, res, function(){
-                res.send("new user added");                    
+                res.send({message:"new user added"});                    
             })
         }else{
-            console.log(err);
-            res.redirect("/login");
+            res.send(err);
         }
     })
     
@@ -139,8 +137,8 @@ app.get("/auth/google/",
 //callbackURL from line 47. where google sends user after authentication
 //app.get('path', middleware, function(req, res))
 app.get("/auth/google/jobs", 
-passport.authenticate('google', {failureRedirect: 'http://localhost:3000/login'}), function(req, res){
-    res.redirect("http://localhost:3000/dashboard");
+passport.authenticate('google', {failureRedirect: 'https://apptracker.us/login'}), function(req, res){
+    res.redirect("https://apptracker.us/dashboard");
 })
 //login with passport local strategy    
 app.route("/login")
@@ -150,7 +148,6 @@ app.route("/login")
             username: req.body.username,
             password: req.body.password
         })
-        console.log(user);
         req.login(user, function(err){
             if (err) console.log(err);
             if(!err){
@@ -164,7 +161,6 @@ app.route("/login")
 
 app.post("/job-app", (req, res)=>{
         
-        console.log('here recieved')
         if(req.isAuthenticated()){
             const job= {
                 company: req.body.company,
@@ -178,10 +174,8 @@ app.post("/job-app", (req, res)=>{
                 reject: req.body.reject,
                 open: req.body.open
             }
-            console.log("authed");
             const saveJob = new Jobs(job);
             saveJob.save();
-            console.log("successfully added job");
         }else{
             console.log('not authed')
 
@@ -192,13 +186,10 @@ app.get("/user-jobs", async (req, res)=>{
         let userJobs = await Jobs.find({"user": req.user._id});
         res.send(userJobs);
     }else{
-        console.log('notSigned in');
         res.send("sign in bitch");
     }
 })
 app.post("/onejob", async (req, res)=>{
-    console.log("recieved");
-    console.log(req.body);
     let specificJob = await Jobs.findOne({"_id": req.body.jobId});
     console.log(specificJob);
     res.send(specificJob);
