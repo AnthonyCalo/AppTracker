@@ -51,7 +51,7 @@ app.use(passport.session());
 
 
 //connect to mongoose database
-mongoose.connect(`mongodb+srv://Tony:IEd2HWpJAz7TfXe7@cluster0.4tckt.mongodb.net/jobsDB`, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(process.env.MONGO_CREDENTIALS, {useNewUrlParser: true, useUnifiedTopology: true});
 
 //DB schema. User pass and stock list
 const userSchema = new mongoose.Schema({
@@ -105,8 +105,8 @@ passport.deserializeUser(function(id, done) {
 
 //googleOauth
 passport.use(new GoogleStrategy({
-    clientID: '374142364789-qj5idkrs1nprsddeccrv1ks6u24g9j20.apps.googleusercontent.com',
-    clientSecret: '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',
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
     callbackURL: "https://job-app-tracker-calo.herokuapp.com/auth/google/jobs",
     userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo'
   },
