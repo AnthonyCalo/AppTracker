@@ -158,9 +158,12 @@ app.route("/login")
                 }
             })
     });
+//added to keep heroku server up w/ kaffeine
+app.get("/", (req,res)=>{
+    res.send("caffeine");
+})
 
 app.post("/job-app", (req, res)=>{
-        
         if(req.isAuthenticated()){
             const job= {
                 company: req.body.company,
